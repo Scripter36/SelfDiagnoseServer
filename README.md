@@ -1,0 +1,2 @@
+# SelfDiagnoseServer
+server for SelfDiagnose
