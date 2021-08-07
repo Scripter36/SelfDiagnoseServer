@@ -3,7 +3,9 @@ import path from 'path'
 
 export interface Diagnose {
   unique: string
-  data: { posibility: number, index: number }[]
+  data: { posibility: number, index: number }[],
+  symptoms: number[],
+  date: string
 }
 
 export interface User {
@@ -13,12 +15,24 @@ export interface User {
   token?: string
 }
 
+export interface Comment {
+  unique: string
+  contents: string
+  rating: number
+}
+
+export interface Hospital {
+  comments: Comment[]
+}
+
 export default class DataManager {
   public static diagnoseData: Diagnose[] = []
   public static userData: User[] = []
+  public static hospitalData: Hospital[] = []
   static init () {
     this.loadDiagnoseData()
     this.loadUserData()
+    this.loadHospitalData()
   }
 
   static saveDiagnoseData () {
@@ -35,5 +49,13 @@ export default class DataManager {
 
   static loadUserData () {
     this.userData = JSON.parse(fs.readFileSync(path.resolve('data/userData.json')).toString())
+  }
+
+  static saveHospitalData () {
+    fs.writeFileSync(path.resolve('data/hospitalData.json'), JSON.stringify(this.hospitalData))
+  }
+
+  static loadHospitalData () {
+    this.hospitalData = JSON.parse(fs.readFileSync(path.resolve('data/hospitalData.json')).toString())
   }
 }

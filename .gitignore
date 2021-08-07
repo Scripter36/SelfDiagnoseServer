@@ -3,3 +3,4 @@ build
 data/diagnoseData.json
 data/userData.json
 src/**/*.js
+public

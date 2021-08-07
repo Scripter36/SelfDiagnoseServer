@@ -15,15 +15,15 @@ export default class LoginHandler extends Handler {
   static signin (req: core.Request, res: core.Response) {
     const id = req.body.id as string
     const password = crypto.createHash('sha256').update(req.body.password + this.salt).digest('base64')
-    const found = DataManager.userData.every((user) => {
+    const found = DataManager.userData.some((user) => {
       if (user.id === id && user.password === password) {
         user.token = user.unique + crypto.randomBytes(20).toString('hex')
         res.cookie('token', user.token, { maxAge: 2592000000 }) // 1 Month
         res.redirect('/')
         res.end()
-        return false
+        return true
       }
-      return true
+      return false
     })
     if (!found) {
       res.send({ success: false })
@@ -54,9 +54,10 @@ export default class LoginHandler extends Handler {
   static getUserInfo (req: core.Request, res: core.Response) {
     const user = this.getUser(req)
     if (user) {
-      const qualifiedUser = user
-      delete qualifiedUser.password
-      delete qualifiedUser.token
+      const qualifiedUser = {
+        id: user.id,
+        unique: user.unique
+      }
       res.send({ success: true, result: qualifiedUser })
       res.end()
     } else {
@@ -66,7 +67,7 @@ export default class LoginHandler extends Handler {
   }
 
   static checkId (id: string) {
-    return !DataManager.userData.every((user) => user.id === id)
+    return !DataManager.userData.some((user) => user.id === id)
   }
 
   static getUser (req: core.Request) {

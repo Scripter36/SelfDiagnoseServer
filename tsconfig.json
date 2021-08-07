@@ -10,8 +10,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "isolatedModules": true,
-    "ourDir": "./build"
+    "isolatedModules": true
   },
   "include": [
     "src"
